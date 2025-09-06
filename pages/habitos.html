@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/style/style.css">
+    
     <title>Bons Habitos</title>
 </head>
 <body>
-    <nav>
+    <!--NAVBAR-->
+    <nav class="navigation">
         <ul>
             <li>
                 <h1>
@@ -17,12 +19,40 @@
                 </h1>
             </li>
             <li>
-                <a href="cadastro.html">Novos afazeres</a>
+                <a href="cadastro-tarefas.html">Novos afazeres</a>
             </li>
             <li>
                 <a href="habitos.html">Novos rotinas</a>
             </li>
         </ul>
     </nav>
+
+
+    <!--Cadastrar um novo hábito-->
+    <h1>Novo hábito</h1>
+    <form id="form_routine">
+
+        <label for="goal">Hábito desejado: </label>
+        <input type="text" id="goal"> <br>
+
+
+        <label for="establish_your_goal">Estabeleça sua meta: </label>
+        <select name="goal_by_week" id="establish_your_goal">
+            <option value="once_a_week">1 vez por semana</option>
+            <option value="twice_a_week">2 vezes por semana</option>
+            <option value="three_times">3 vezes por semana</option>
+            <option value="four_time">4 vezes por semana</option>
+            <option value="five_time">5 vezes por semana</option>
+            <option value="six_time">6 vezes por semana</option>
+            <option value="everyday">Todos os dias</option>
+        </select><br>
+
+        <label for="time_to_do">Horário para realizar a atividade: </label>
+        <input type="time" id="time_to_do"><br>
+
+        <button type="submit">Salvar rotina</button>
+    </form>
+
+<script src="../assets/js/main.js"></script>
 </body>
 </html>

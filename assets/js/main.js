@@ -1,54 +1,143 @@
-document.getElementById("form_task").addEventListener("submit", function(event){
-    event.preventDefault(); //Evita que a página seja recarregada;
+// --- CADASTRO DE TAREFA ---
+const form = document.getElementById("form_task");
+if (form) {
+    form.addEventListener("submit", function(event){
+        event.preventDefault(); // Evita recarregar a página
 
-    const tarefa = document.getElementById("what_to_do").value;
-    const data_inicio = document.getElementById("start_date").value;
-    const data_fim = document.getElementById("due_date").value;
+        const tarefa = document.getElementById("what_to_do").value;
+        const data_inicio = document.getElementById("start_date").value;
+        const data_fim = document.getElementById("due_date").value;
 
+        // Recupera tarefas já salvas
+        let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
 
-    //Serve para recuperar as tarefas já salvas
-    let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
+        // Adiciona nova tarefa
+        tarefas.push({
+            tarefa: tarefa,
+            inicio: data_inicio,
+            fim: data_fim
+        });
 
-    //Adiciona tarefas para o JSON
-    tarefa.push({
-        tarefa: tarefa,
-        inicio: data_inicio,
-        fim: data_fim
+        // Salva no LocalStorage
+        localStorage.setItem("tarefas", JSON.stringify(tarefas));
+
+        // Redireciona para a página inicial
+        window.location.href = "../index.html";
     });
+}
 
-
-    //Salva no LocalStorage
-    localStorage.setItem("tarefas", JSON.stringify(tarefas));
-
-    //Redireciona para a página inicial
-    window.location.href = "../index.html";
-});
-
-
+// --- CARREGAR LISTA DE TAREFAS ---
 function carregarTarefas(){
     let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
     const taskList = document.getElementById("taskList");
 
+    if (!taskList) return; // se não existir, não faz nada
 
-    taskList.innerHTML = ""; //Aqui, serve para limpar a lista;
+    taskList.innerHTML = ""; // limpa a lista
 
-    tarefas.foreach((task, index) =>{
+    tarefas.forEach((t, index) =>{
         const div = document.createElement("div");
-        div.classList.add("task");div.innerHTML = `
-                    <span>
-                        <input type="checkbox"> ${t.tarefa}
-                    </span>
-                    <span>
-                        <div>
-                            Início: ${t.inicio} <br>
-                            Validade: ${t.validade}
-                        </div>
-                    </span>
-                    <div class="delete_button" onclick="excluirTarefa(${index})">Excluir</div>
-                `;
+        div.classList.add("task");
 
-                taskList.appendChild(div);
+        div.innerHTML = `
+            <span>
+                <input type="checkbox"> ${t.tarefa}
+            </span>
+            <span>
+                <div>
+                    Início: ${t.inicio} <br>
+                    Validade: ${t.fim}
+                </div>
+            </span>
+            <div class="delete_button" onclick="excluirTarefa(${index})">Excluir</div>
+        `;
 
-
-    })
+        taskList.appendChild(div);
+    });
 }
+
+// --- EXCLUIR UMA TAREFA ---
+function excluirTarefa(index) {
+    let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
+    tarefas.splice(index, 1); // remove pelo índice
+    localStorage.setItem("tarefas", JSON.stringify(tarefas));
+    carregarTarefas();
+}
+
+// --- Executa carregarTarefas automaticamente quando abrir o index ---
+document.addEventListener("DOMContentLoaded", carregarTarefas);
+
+
+
+
+// Cadastro de uma rotina
+const form_rotina = document.getElementById("form_routine");
+if (form_rotina) {
+    form_rotina.addEventListener("submit", function(event){
+        event.preventDefault(); // Evita recarregar a página
+
+        const habito = document.getElementById("goal").value;
+
+        const select = document.getElementById("establish_your_goal");
+        const meta = select.options[select.selectedIndex].text;
+        
+        const horario = document.getElementById("time_to_do").value;
+
+        // Recupera hábitos já salvos
+        let habitos = JSON.parse(localStorage.getItem("habitos")) || [];
+
+        // Adiciona novo hábito
+        habitos.push({
+            habito: habito,
+            meta: meta,
+            horario: horario
+        });
+
+        // Salva no LocalStorage
+        localStorage.setItem("habitos", JSON.stringify(habitos));
+
+        // Redireciona para a página inicial
+        window.location.href = "../index.html";
+    });
+}
+
+// --- CARREGAR LISTA DE ROTINAS/HÁBITOS ---
+function carregarRotinas(){
+    let habitos = JSON.parse(localStorage.getItem("habitos")) || [];
+    const routinesList = document.getElementById("routineList");
+
+    if (!routinesList) return; // se não existir, não faz nada
+
+    routinesList.innerHTML = ""; // limpa a lista
+
+    habitos.forEach((h, index) =>{
+        const div = document.createElement("div");
+        div.classList.add("task");
+
+        div.innerHTML = `
+            <span>
+                <input type="checkbox"> ${h.habito}
+            </span>
+            <span>
+                <div>
+                    Meta: ${h.meta} <br>
+                    Horário: ${h.horario}
+                </div>
+            </span>
+            <div class="delete_button" onclick="excluirRotina(${index})">Excluir</div>
+        `;
+
+        routinesList.appendChild(div);
+    });
+}
+
+// --- EXCLUIR UMA ROTINA ---
+function excluirRotina(index) {
+    let habitos = JSON.parse(localStorage.getItem("habitos")) || [];
+    habitos.splice(index, 1); // remove pelo índice
+    localStorage.setItem("habitos", JSON.stringify(habitos));
+    carregarRotinas();
+}
+
+// Executa carregarRotinas quando abrir
+document.addEventListener("DOMContentLoaded", carregarRotinas);
