@@ -1,0 +1,53 @@
+/* Variables declared here - these are the colors for our pages, as well as the font stacks and sizes. */
+:root {
+    --black: #171321;
+    --dkblue: #0d314b;
+    --plum: #4b0d49;
+    --hotmag: #ff17e4;
+    --magenta: #e310cb;
+    --aqua: #86fbfb;
+    --white: #f7f8fa;
+    --font-size: 1.3rem;
+    --mono: "Oxygen mono", monospace;
+    --sans: Oxygen, sans-serif;
+}
+
+
+
+/* Border box model */
+html {
+    box-sizing: border-box;
+}
+* , *::before, *::after {
+    box-sizing: inherit;
+}
+
+
+/* Generic styles for the page */
+body {
+    padding: 0;
+    margin-left: 50px;
+    margin-right: 50px;
+    font-family: var(--sans);
+    background-color: var(--black);
+    color: var(--white);
+    font-size: var(--font-size);
+}
+
+
+nav ul{
+    list-style-type: none;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    flex-flow: row;
+    display: flex;
+}
+
+nav li:first-child{
+    flex-basis: 100%;
+}
+
+nav a{
+    text-decoration: none;
+}
