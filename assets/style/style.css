@@ -22,6 +22,10 @@ html {
 }
 
 
+.content{
+    min-height: 100vh;
+}
+
 /* Generic styles for the page */
 body {
     padding: 0;
@@ -53,7 +57,8 @@ a:hover {
 nav {
     font-family: var(--mono);
     font-size: 80%;
-    padding: 1rem;
+    padding: 3rem;
+
 }
 
 nav h1 a {
@@ -114,6 +119,122 @@ nav a:hover {
     }
 }
 
+/*Seção de afazeres e rotinas*/
+
+.all_activities{
+    display: flex;
+}
+
+.all_activities .routines_content{
+    background-color: var(--dkblue);
+    margin-left: 100px;
+    margin-right: 100px;
+    border-radius: 10px;
+    padding: 4rem 1rem;
+    justify-content: space-between; /* espaço entre as seções */
+    align-items: flex-start; /* alinha pelo topo */
+    gap: 2rem;
+}
+
+
+.all_activities .to_do_content{
+    background-color: var(--dkblue);
+    margin-left: 100px;
+    margin-right: 100px;
+    border-radius: 10px;
+    padding: 4rem 1rem;
+    justify-content: space-between; /* espaço entre as seções */
+    align-items: flex-start; /* alinha pelo topo */
+    gap: 2rem;
+}
+
+
+
+.all_activities > section {
+    flex: 1; /* Faz cada bloco ocupar metade da largura */
+    font-family: var(--mono);
+}
+
+.all_activities > section > div {
+    /* Faz cada bloco ocupar metade da largura */
+    flex: 1;        /* cada um cresce igualmente */
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+
+.task {
+    background: var(--black);
+    color: var(--white);
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between; /* distribui conteúdo */
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+
+.task.concluida {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+/*Formulários*/
+form {
+    background: var(--dkblue);
+    padding: 1.5rem;
+    border-radius: 12px;
+    max-width: 400px;
+    margin: 1rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+form label{
+    display: inline;
+    color: var(--white);
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+}
+
+form input, form select{
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: 1px solid var(--aqua);
+    background: var(--black);
+    color: var(--white);
+    font-size: 1rem;
+    width: 100%;
+}
+
+
+form button {
+    padding: 0.7rem;
+    border-radius: 8px;
+    border: none;
+    background: var(--magenta);
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, background 0.2s;
+}
+
+form button:hover{
+    background: var(--hotmag);
+    transform: scale(1.05);
+}
+
+
+form input:focus, form select:focus{
+    outline: none;
+    border-color: var(--hotmag);
+    box-shadow: 0 0 6px var(--hotmag);
+}
+
 
 /*Footer content*/
 footer{
@@ -130,4 +251,11 @@ footer ul {
     justify-content: center;
     font-size: 3rem;
     gap: 3rem;
+}
+
+
+footer > a > .github-logo{
+    width: 20px;
+    height: auto;
+    filter: invert(55%) sepia(100%) saturate(500%) hue-rotate(180deg);
 }

@@ -40,29 +40,39 @@ function carregarTarefas(){
         div.classList.add("task");
 
         div.innerHTML = `
-            <span>
-                <input type="checkbox"> ${t.tarefa}
-            </span>
-            <span>
+            <section class="to_do">
+                <label>
+                    <input type="checkbox" onchange="marcarTarefa(${index}, this.checked)"
+                        ${t.concluida ? "checked" : ""}>
+                    ${t.tarefa}
+                </label>
                 <div>
                     Início: ${t.inicio} <br>
                     Validade: ${t.fim}
                 </div>
-            </span>
-            <div class="delete_button" onclick="excluirTarefa(${index})">Excluir</div>
+            </section>
         `;
 
+        // ✅ aplica a classe se já estiver concluída
+        if (t.concluida) {
+            div.classList.add("concluida");
+        }
         taskList.appendChild(div);
     });
 }
 
-// --- EXCLUIR UMA TAREFA ---
-function excluirTarefa(index) {
+function marcarTarefa(index, concluida){
     let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
-    tarefas.splice(index, 1); // remove pelo índice
+
+    // adiciona ou atualiza a flag "concluida"
+    tarefas[index].concluida = concluida;
+
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
+
     carregarTarefas();
 }
+
+
 
 // --- Executa carregarTarefas automaticamente quando abrir o index ---
 document.addEventListener("DOMContentLoaded", carregarTarefas);
@@ -101,7 +111,7 @@ if (form_rotina) {
     });
 }
 
-// --- CARREGAR LISTA DE ROTINAS/HÁBITOS ---
+
 function carregarRotinas(){
     let habitos = JSON.parse(localStorage.getItem("habitos")) || [];
     const routinesList = document.getElementById("routineList");
@@ -115,27 +125,36 @@ function carregarRotinas(){
         div.classList.add("task");
 
         div.innerHTML = `
-            <span>
-                <input type="checkbox"> ${h.habito}
-            </span>
-            <span>
+            <section class="routines">
+                <label>
+                    <input type="checkbox" onchange="marcarRotina(${index}, this.checked)" 
+                        ${h.concluida ? "checked" : ""}>
+                    ${h.habito}
+                </label>
                 <div>
                     Meta: ${h.meta} <br>
                     Horário: ${h.horario}
                 </div>
-            </span>
-            <div class="delete_button" onclick="excluirRotina(${index})">Excluir</div>
+            </section>
         `;
+
+        // ✅ aplica a classe se já estiver concluída
+        if (h.concluida) {
+            div.classList.add("concluida");
+        }
 
         routinesList.appendChild(div);
     });
 }
 
-// --- EXCLUIR UMA ROTINA ---
-function excluirRotina(index) {
+function marcarRotina(index, concluida){
     let habitos = JSON.parse(localStorage.getItem("habitos")) || [];
-    habitos.splice(index, 1); // remove pelo índice
+
+    // adiciona ou atualiza a flag "concluida"
+    habitos[index].concluida = concluida;
+
     localStorage.setItem("habitos", JSON.stringify(habitos));
+
     carregarRotinas();
 }
 
