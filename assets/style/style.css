@@ -10,6 +10,10 @@
     --font-size: 1.3rem;
     --mono: "Oxygen mono", monospace;
     --sans: Oxygen, sans-serif;
+
+    --priority-alta: #ff4757;     /* Vermelho vibrante que combina */
+    --priority-media: #ffa726;    /* Laranja/amarelo que combina */
+    --priority-baixa: #66bb6a;    /* Verde que combina */
 }
 
 
@@ -206,6 +210,24 @@ nav a:hover {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/*Editando as cores de prioridade*/
+.priority-text {
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.priority-text.alta {
+    color: var(--priority-alta);
+}
+
+.priority-text.media {
+    color: var(--priority-media);
+}
+
+.priority-text.baixa {
+    color: var(--priority-baixa);
 }
 
 /*Formulários*/

@@ -5,6 +5,13 @@ if (form) {
         event.preventDefault(); // Evita recarregar a página
 
         const tarefa = document.getElementById("what_to_do").value;
+
+        const select_category = document.getElementById("category_optios");
+        const category = select_category.options[select_category.selectedIndex].text;
+
+        const select_priority = document.getElementById("prior_level_options");
+        const priority = select_priority.options[select_priority.selectedIndex].text;
+
         const data_inicio = document.getElementById("start_date").value;
         const data_fim = document.getElementById("due_date").value;
 
@@ -14,6 +21,8 @@ if (form) {
         // Adiciona nova tarefa
         tarefas.push({
             tarefa: tarefa,
+            categoria: category,
+            prioridade: priority,
             inicio: data_inicio,
             fim: data_fim,
             concluida: false
@@ -27,6 +36,31 @@ if (form) {
     });
 }
 
+function getPriorityClass(prioridade){
+    const priority = prioridade.toLowerCase();
+
+    if(priority.includes('alta')){ 
+        return "Alta";
+    }
+    if(priority.includes('média') || priority.includes('media')){
+        return "Média";
+    }
+    if(priority.includes('baixa')){
+        return "Baixa";
+    }
+    return '';
+}
+
+function getPriorityText(prioridade) {
+    const priority = prioridade.toLowerCase();
+    let className = '';
+    if (priority.includes('alta')) className = 'alta';
+    else if (priority.includes('média') || priority.includes('media')) className = 'media';
+    else if (priority.includes('baixa')) className = 'baixa';
+    
+    return `<span class="priority-text ${className}">${prioridade}</span>`;
+}
+
 // --- CARREGAR LISTA DE TAREFAS ---
 function carregarTarefas(){
     let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
@@ -36,12 +70,19 @@ function carregarTarefas(){
 
     taskList.innerHTML = ""; // limpa a lista
 
-    // ✅ FILTRAR apenas tarefas não concluídas para exibir
+    // FILTRAR apenas tarefas não concluídas para exibir
     tarefas.forEach((t, index) =>{
         if (t.concluida) return; // Pula tarefas já concluídas
 
         const div = document.createElement("div");
         div.classList.add("task");
+        
+        
+        const priorityClass = getPriorityClass(t.prioridade || '');
+        if (priorityClass) {
+            div.classList.add(priorityClass);
+        }
+        
         div.setAttribute("data-index", index); // Para identificar a tarefa
 
         div.innerHTML = `
@@ -51,6 +92,8 @@ function carregarTarefas(){
                     ${t.tarefa}
                 </label>
                 <div>
+                    Categoria: ${t.categoria} <br>
+                    Prioridade: ${getPriorityText(t.prioridade || 'Não definida')} <br>
                     Início: ${t.inicio} <br>
                     Validade: ${t.fim}
                 </div>
@@ -61,7 +104,7 @@ function carregarTarefas(){
     });
 }
 
-// FUNÇÃO CORRIGIDA com animação
+
 function marcarTarefa(index, concluida){
     let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
     const taskDiv = document.querySelector(`.task[data-index="${index}"]`);
@@ -73,7 +116,7 @@ function marcarTarefa(index, concluida){
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
 
     if (concluida) {
-        // ✅ DESABILITA o checkbox para evitar cliques duplos
+        //DESABILITA o checkbox para evitar cliques duplos
         const checkbox = taskDiv.querySelector('input[type="checkbox"]');
         checkbox.disabled = true;
         
@@ -86,7 +129,7 @@ function marcarTarefa(index, concluida){
             
             // Remove do DOM após a animação
             setTimeout(() => {
-                // ✅ REMOVE definitivamente da lista
+                //Remove definitivamente da lista
                 tarefas = tarefas.filter((_, i) => i !== index);
                 localStorage.setItem("tarefas", JSON.stringify(tarefas));
                 
@@ -100,6 +143,10 @@ function marcarTarefa(index, concluida){
 // --- Executa carregarTarefas automaticamente quando abrir o index ---
 document.addEventListener("DOMContentLoaded", carregarTarefas);
 
+
+
+//////////////////////////////////////////////////////////////////////////////////
+
 // --- CADASTRO DE ROTINA ---
 const form_rotina = document.getElementById("form_routine");
 if (form_rotina) {
@@ -110,6 +157,12 @@ if (form_rotina) {
 
         const select = document.getElementById("establish_your_goal");
         const meta = select.options[select.selectedIndex].text;
+
+        const select_category = document.getElementById("category_optios");
+        const category = select_category.options[select_category.selectedIndex].text;
+
+        const select_priority = document.getElementById("prior_level_options");
+        const priority = select_priority.options[select_priority.selectedIndex].text;
         
         const horario = document.getElementById("time_to_do").value;
 
@@ -120,6 +173,8 @@ if (form_rotina) {
         habitos.push({
             habito: habito,
             meta: meta,
+            categoria: category,
+            prioridade: priority,
             horario: horario,
             concluida: false
         });
@@ -155,12 +210,14 @@ function carregarRotinas(){
                 </label>
                 <div>
                     Meta: ${h.meta} <br>
+                    Categoria: ${h.categoria} <br>
+                    Prioridade: ${getPriorityText(h.prioridade || 'Não definida')} <br>
                     Horário: ${h.horario}
                 </div>
             </section>
         `;
 
-        // ✅ aplica a classe se já estiver concluída
+        // Aplica a classe se já estiver concluída
         if (h.concluida) {
             div.classList.add("concluida");
         }
@@ -169,7 +226,6 @@ function carregarRotinas(){
     });
 }
 
-// Função para marcar rotinas com animação
 function marcarRotina(index, concluida){
     let habitos = JSON.parse(localStorage.getItem("habitos")) || [];
     const routineDiv = document.querySelector(`.task[data-routine-index="${index}"]`);
@@ -181,11 +237,11 @@ function marcarRotina(index, concluida){
     localStorage.setItem("habitos", JSON.stringify(habitos));
 
     if (concluida) {
-        // ✅ DESABILITA o checkbox para evitar cliques duplos
+        // Aqui serve para desabilitar o checkbox e evitar cliques duplos
         const checkbox = routineDiv.querySelector('input[type="checkbox"]');
         checkbox.disabled = true;
         
-        // Primeiro aplica o estilo riscado
+        // Aplica-se o estilo riscado
         routineDiv.classList.add("concluida");
         
         // Depois de um tempo, aplica a animação de saída
@@ -194,7 +250,7 @@ function marcarRotina(index, concluida){
             
             // Remove do DOM após a animação, mas não remove permanentemente
             setTimeout(() => {
-                // ✅ Para rotinas, apenas desmarca (são recorrentes)
+                //Para rotinas, apenas desmarca (são recorrentes)
                 habitos[index].concluida = false;
                 localStorage.setItem("habitos", JSON.stringify(habitos));
                 carregarRotinas();
