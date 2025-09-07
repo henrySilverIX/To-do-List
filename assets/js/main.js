@@ -15,7 +15,8 @@ if (form) {
         tarefas.push({
             tarefa: tarefa,
             inicio: data_inicio,
-            fim: data_fim
+            fim: data_fim,
+            concluida: false
         });
 
         // Salva no LocalStorage
@@ -35,15 +36,18 @@ function carregarTarefas(){
 
     taskList.innerHTML = ""; // limpa a lista
 
+    // ✅ FILTRAR apenas tarefas não concluídas para exibir
     tarefas.forEach((t, index) =>{
+        if (t.concluida) return; // Pula tarefas já concluídas
+
         const div = document.createElement("div");
         div.classList.add("task");
+        div.setAttribute("data-index", index); // Para identificar a tarefa
 
         div.innerHTML = `
             <section class="to_do">
                 <label>
-                    <input type="checkbox" onchange="marcarTarefa(${index}, this.checked)"
-                        ${t.concluida ? "checked" : ""}>
+                    <input type="checkbox" onchange="marcarTarefa(${index}, this.checked)">
                     ${t.tarefa}
                 </label>
                 <div>
@@ -53,34 +57,50 @@ function carregarTarefas(){
             </section>
         `;
 
-        // ✅ aplica a classe se já estiver concluída
-        if (t.concluida) {
-            div.classList.add("concluida");
-        }
         taskList.appendChild(div);
     });
 }
 
+// FUNÇÃO CORRIGIDA com animação
 function marcarTarefa(index, concluida){
     let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
-
+    const taskDiv = document.querySelector(`.task[data-index="${index}"]`);
+    
+    if (!taskDiv) return; // Proteção contra erros
+    
     // adiciona ou atualiza a flag "concluida"
     tarefas[index].concluida = concluida;
-
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
 
-    carregarTarefas();
+    if (concluida) {
+        // ✅ DESABILITA o checkbox para evitar cliques duplos
+        const checkbox = taskDiv.querySelector('input[type="checkbox"]');
+        checkbox.disabled = true;
+        
+        // Primeiro aplica o estilo riscado
+        taskDiv.classList.add("concluida");
+        
+        // Depois de um tempo, aplica a animação de saída
+        setTimeout(() => {
+            taskDiv.classList.add("saindo");
+            
+            // Remove do DOM após a animação
+            setTimeout(() => {
+                // ✅ REMOVE definitivamente da lista
+                tarefas = tarefas.filter((_, i) => i !== index);
+                localStorage.setItem("tarefas", JSON.stringify(tarefas));
+                
+                // Recarrega para reindexar
+                carregarTarefas();
+            }, 600); // Tempo da animação CSS
+        }, 1500); // Aguarda 1.5s mostrando riscado
+    }
 }
-
-
 
 // --- Executa carregarTarefas automaticamente quando abrir o index ---
 document.addEventListener("DOMContentLoaded", carregarTarefas);
 
-
-
-
-// Cadastro de uma rotina
+// --- CADASTRO DE ROTINA ---
 const form_rotina = document.getElementById("form_routine");
 if (form_rotina) {
     form_rotina.addEventListener("submit", function(event){
@@ -100,7 +120,8 @@ if (form_rotina) {
         habitos.push({
             habito: habito,
             meta: meta,
-            horario: horario
+            horario: horario,
+            concluida: false
         });
 
         // Salva no LocalStorage
@@ -111,7 +132,7 @@ if (form_rotina) {
     });
 }
 
-
+// --- CARREGAR ROTINAS ---
 function carregarRotinas(){
     let habitos = JSON.parse(localStorage.getItem("habitos")) || [];
     const routinesList = document.getElementById("routineList");
@@ -123,6 +144,7 @@ function carregarRotinas(){
     habitos.forEach((h, index) =>{
         const div = document.createElement("div");
         div.classList.add("task");
+        div.setAttribute("data-routine-index", index);
 
         div.innerHTML = `
             <section class="routines">
@@ -147,15 +169,41 @@ function carregarRotinas(){
     });
 }
 
+// Função para marcar rotinas com animação
 function marcarRotina(index, concluida){
     let habitos = JSON.parse(localStorage.getItem("habitos")) || [];
+    const routineDiv = document.querySelector(`.task[data-routine-index="${index}"]`);
+
+    if (!routineDiv) return; // Proteção contra erros
 
     // adiciona ou atualiza a flag "concluida"
     habitos[index].concluida = concluida;
-
     localStorage.setItem("habitos", JSON.stringify(habitos));
 
-    carregarRotinas();
+    if (concluida) {
+        // ✅ DESABILITA o checkbox para evitar cliques duplos
+        const checkbox = routineDiv.querySelector('input[type="checkbox"]');
+        checkbox.disabled = true;
+        
+        // Primeiro aplica o estilo riscado
+        routineDiv.classList.add("concluida");
+        
+        // Depois de um tempo, aplica a animação de saída
+        setTimeout(() => {
+            routineDiv.classList.add("saindo");
+            
+            // Remove do DOM após a animação, mas não remove permanentemente
+            setTimeout(() => {
+                // ✅ Para rotinas, apenas desmarca (são recorrentes)
+                habitos[index].concluida = false;
+                localStorage.setItem("habitos", JSON.stringify(habitos));
+                carregarRotinas();
+            }, 600);
+        }, 1500);
+    } else {
+        // Se desmarcou, remove as classes
+        routineDiv.classList.remove("concluida", "saindo");
+    }
 }
 
 // Executa carregarRotinas quando abrir
